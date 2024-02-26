@@ -11,12 +11,13 @@
     ]
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint --fix --ext .js,.jsx ."
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "babel-eslint": "^10.0.3",
-    "eslint": "^8.21.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
