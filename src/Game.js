@@ -3,6 +3,7 @@ import Utils from './lib/GameUtils.js'
 
 export default class Game extends Lightning.Component {
   static _template() {
+    // This defines a static method _template() for setting up the template of the component.
     return {
       Game: {
         PlayerPosition: {
@@ -46,12 +47,14 @@ export default class Game extends Lightning.Component {
   }
 
   _construct() {
+    //This defines a constructor _construct() to initialize variables.
     this._index = 0
     this._aiScore = 0
     this._playerScore = 0
   }
 
   _active() {
+    //This defines a method _active() to handle component activation.
     this._reset()
     this.tag('Field').children.forEach((el, idx) => {
       el.setSmooth(idx < 2 ? 'w' : 'h', 900, { duration: 0.7, delay: idx * 0.15 })
@@ -59,6 +62,7 @@ export default class Game extends Lightning.Component {
   }
 
   _reset() {
+    //This defines a method _reset() to reset the game state.
     // reset tiles
     this._tiles = ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e']
 
@@ -69,6 +73,7 @@ export default class Game extends Lightning.Component {
     this._setState('')
   }
 
+  //This defines a method _handleUp() to handle the up arrow key press.
   _handleUp() {
     let idx = this._index
     if (idx - 3 >= 0) {
@@ -76,6 +81,7 @@ export default class Game extends Lightning.Component {
     }
   }
 
+  //This defines a method _handleDown() to handle the down arrow key press.
   _handleDown() {
     let idx = this._index
     if (idx + 3 <= this._tiles.length - 1) {
@@ -97,6 +103,7 @@ export default class Game extends Lightning.Component {
     }
   }
 
+  // This defines a method _setIndex(idx) to set the current index.
   _setIndex(idx) {
     this.tag('PlayerPosition').patch({
       smooth: {
@@ -107,6 +114,7 @@ export default class Game extends Lightning.Component {
     this._index = idx
   }
 
+  // This defines a method _handleEnter() to handle the enter key press.
   _handleEnter() {
     if (this._tiles[this._index] === 'e') {
       if (this.place(this._index, 'x')) {
@@ -115,6 +123,7 @@ export default class Game extends Lightning.Component {
     }
   }
 
+  // This defines a method place(index, marker) to place a marker on the game board.
   place(index, marker) {
     this._tiles[index] = marker
     this.render(this._tiles)
@@ -128,6 +137,7 @@ export default class Game extends Lightning.Component {
     return true
   }
 
+  // This defines a method render(tiles) to render the game board.
   render(tiles) {
     this.tag('Markers').children = tiles.map((el, idx) => {
       return {
@@ -138,6 +148,7 @@ export default class Game extends Lightning.Component {
     })
   }
 
+  // This defines a static method _states() to define the states of the game component.
   static _states() {
     return [
       class Computer extends this {

@@ -6,7 +6,9 @@
  * @returns {number[]|*}
  */
 const getMatchingPatterns = (regex, tiles) => {
+  // defines a function that takes a regular expression regex and an array tiles as arguments.
   const patterns = [
+    //This array patterns represents winning patterns in a tic-tac-toe game.
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
@@ -17,6 +19,7 @@ const getMatchingPatterns = (regex, tiles) => {
     [2, 4, 6],
   ]
   return patterns.reduce((sets, pattern) => {
+    //This starts a reduce operation on the patterns array.
     const normalized = pattern
       .map((tileIndex) => {
         return tiles[tileIndex]
@@ -55,6 +58,7 @@ const getFutureWinningIndex = (tiles) => {
 }
 
 export default {
+  //Exporting these functions as properties of an object
   AI: (tiles) => {
     const mostLogicalIndex = getFutureWinningIndex(tiles)
     if (mostLogicalIndex !== -1) {
