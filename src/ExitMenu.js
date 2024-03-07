@@ -1,7 +1,7 @@
 import { Lightning } from '@lightningjs/sdk'
 import Menu from './menu/Menu.js'
 
-export default class Exit extends Lightning.Component {
+export default class ExitMenu extends Lightning.Component {
   static _template() {
     return {
       Question: {
@@ -28,7 +28,6 @@ export default class Exit extends Lightning.Component {
 
   _handleEnter() {
     // on enter being clicked a signal called select will be fired.
-    this.signal('quit')
-    //this.signal('select', { item: this.tag('Menu').activeItem }) //calls the getter method get activeItem()
+    this.signal('select', { item: this.tag('Menu').activeItem }) //calls the getter method get activeItem()
   }
 }

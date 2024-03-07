@@ -3,11 +3,14 @@ import Splash from './Splash.js'
 import Main from './Main.js'
 import Game from './Game.js'
 import About from './About.js'
-import Exit from './Exit.js'
+import ExitMenu from './ExitMenu.js'
 
 export default class App extends Lightning.Component {
   static getFonts() {
-    return [{ family: 'pixel', url: Utils.asset('fonts/pixel.ttf'), descriptor: {} }]
+    return [
+      { family: 'pixel', url: Utils.asset('fonts/pixel.ttf'), descriptor: {} },
+      { family: 'Roboto-Regular', url: Utils.asset('fonts/Roboto-Regular.ttf'), descriptor: {} },
+    ]
   }
 
   static _template() {
@@ -18,11 +21,13 @@ export default class App extends Lightning.Component {
         color: 0xff404be3, // blue background colour (ARGB colour)
         w: 1920, // Width of the background (adjust as needed)
         h: 1080, // Height of the background (adjust as needed) to draw a blue rectangle of 1920px by 1080px
+        visible: true,
       },
       Logo: {
         x: 100,
         y: 100,
         text: { text: 'TicTacToe', fontFace: 'pixel' }, // A text texture, and text and fontface is a prop of the text texture
+        visible: true,
       },
       // Texture type
       rect: true,
@@ -31,7 +36,7 @@ export default class App extends Lightning.Component {
         type: Splash,
         signals: { loaded: true },
         alpha: 0,
-        //pulseText: 'Loading...',
+        pulseText: 'Loading...',
       },
       //component which will be shown at the moment the Splash component sends the loaded signal
       Main: {
@@ -49,11 +54,24 @@ export default class App extends Lightning.Component {
         signals: { backFromAbout: true },
         alpha: 0,
       },
-      Exit: {
-        type: Exit,
+      ExitMenu: {
+        type: ExitMenu,
         alpha: 0,
-        signals: { quit: true },
-        //signals: { select: 'exitSelect' },
+        signals: { select: 'exitSelect' },
+      },
+      Exiting: {
+        type: Splash,
+        signals: { loaded: true },
+        alpha: 1,
+        pulseText: 'Exiting...',
+        visible: false,
+      },
+      Saving: {
+        type: Splash,
+        signals: { loaded: true },
+        alpha: 1,
+        pulseText: 'Saving...',
+        visible: false,
       },
     }
   }
@@ -61,8 +79,8 @@ export default class App extends Lightning.Component {
   // lifecycle event hook
   // on set up, the spalsh state will be entered
   _setup() {
-    //this.tag('Splash').pulseText = 'Loading...';
     this._setState('Splash')
+    //this._splash = this.tag('Splash')
   }
   // statemachine
   static _states() {
@@ -111,8 +129,9 @@ export default class App extends Lightning.Component {
         about() {
           this._setState('About')
         }
+
         exit() {
-          this._setState('Exit')
+          this._setState('ExitMenu')
         }
 
         // change focus path to main
@@ -134,6 +153,9 @@ export default class App extends Lightning.Component {
         _getFocused() {
           return this.tag('Game')
         }
+        _handleBack() {
+          this._setState('Main')
+        }
       },
       class About extends this {
         $enter() {
@@ -150,27 +172,59 @@ export default class App extends Lightning.Component {
           this._setState('Main')
         }
       },
-      class Exit extends this {
+      class ExitMenu extends this {
         $enter() {
-          this.tag('Exit').setSmooth('alpha', 1)
+          this.tag('ExitMenu').setSmooth('alpha', 1)
         }
 
         $exit() {
-          this.tag('Exit').setSmooth('alpha', 0)
+          this.tag('ExitMenu').setSmooth('alpha', 0)
         }
         _getFocused() {
-          return this.tag('Exit')
+          return this.tag('ExitMenu')
         }
-        // exitSelect({ item }) {
-        //   if (this._hasMethod(item.action)) {
-        //     return this[item.action]()
-        //   }
-        // }
-        quit() {
-          this._setState('Splash')
+        //this method takes in an object parameter
+        exitSelect({ item }) {
+          if (this._hasMethod(item.action)) {
+            return this[item.action]()
+          }
         }
 
-        //this.tag('Splash').pulseText = 'Exiting...'
+        quit() {
+          this._setState('Exiting')
+        }
+
+        save() {
+          this._setState('Saving')
+        }
+      },
+      class Exiting extends this {
+        $enter() {
+          this.tag('Exiting').visible = true
+        }
+
+        $exit() {
+          this.tag('Saving').visible = false
+        }
+
+        loaded() {
+          this.tag('Logo').visible = false
+          this.tag('Background').visible = false
+        }
+      },
+      class Saving extends this {
+        $enter() {
+          this.tag('Saving').visible = true
+        }
+
+        $exit() {
+          this.tag('Saving').visible = false
+        }
+
+        loaded() {
+          this.tag('Logo').visible = false
+          this.tag('Background').visible = false
+        }
       },
     ]
   }

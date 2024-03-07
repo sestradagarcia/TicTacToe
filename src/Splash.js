@@ -13,12 +13,18 @@ export default class Splash extends Lightning.Component {
   }
 
   set pulseText(v) {
-    this.text.text = v
+    this._text = v
+  }
+
+  _init() {
+    this._logo = this.tag('Logo')
+    this._logo.text.text = this._text
   }
 
   //changed from init to active because init only render the first time
   // since i go back to the splash if exit is clicked then rendering only the first time wont suffice
   _active() {
+    //debugger
     //_pulse is a property of splash class that is being assigned the animation for the Logo element in template
     this._pulse = this.tag('Logo').animation({
       duration: 4,
