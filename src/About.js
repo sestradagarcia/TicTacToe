@@ -8,7 +8,7 @@ export default class About extends Lightning.Component {
         y: 440,
         mount: 0.5,
         text: {
-          text: 'This is a tic-tac-toe game made using LightningJS',
+          text: 'This is a tic-tac-toe game made by Stephanie using LightningJS',
           fontFace: 'Roboto-Regular',
         },
       },
