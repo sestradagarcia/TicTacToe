@@ -1,0 +1,12 @@
+/* styles.css */
+
+@font-face {
+    font-family: 'pixel';
+    src: url('./fonts/pixel.ttf') format('truetype');
+  }
+  
+  .text {
+    font-family: 'pixel';
+    /* Add other styles as needed */
+  }
+  
