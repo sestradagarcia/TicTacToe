@@ -1,40 +1,55 @@
-import { defineConfig } from 'vite';
-import solidPlugin from 'vite-plugin-solid';
-import { importChunkUrl } from '@lightningjs/vite-plugin-import-chunk-url';
+import { defineConfig } from "vite";
+import solidPlugin from "vite-plugin-solid";
+import legacy from "@vitejs/plugin-legacy";
+import hexColorTransform from "@lightningtv/vite-hex-transform";
 
 export default defineConfig({
-  plugins: [importChunkUrl(), solidPlugin({
-    solid: {
-      moduleName: "@lightningjs/solid",
-      generate: 'universal',
-    },
-  })],
+  plugins: [
+    hexColorTransform(),
+    solidPlugin({
+      solid: {
+        moduleName: "@lightningtv/solid",
+        generate: "universal",
+      },
+    }),
+    legacy({
+      targets: ["chrome>=34"],
+      // polyfills: ["es.promise.finally", "es/map", "es/set"],
+      modernPolyfills: true,
+      additionalLegacyPolyfills: ["whatwg-fetch"],
+    }),
+  ],
+  build: {
+    targets: ["chrome>=68"],
+    minify: false,
+    sourcemap: false,
+  },
   resolve: {
-    dedupe: ['solid-js', '@lightningjs/solid', '@lightningjs/renderer'],
+    alias: {
+      theme: "@lightningtv/l3-ui-theme-base",
+    },
+    dedupe: [
+      "solid-js",
+      "@lightningjs/renderer",
+      "@lightningtv/solid",
+      "@lightningtv/solid/primitives",
+      "@lightningtv/solid-ui",
+    ],
   },
   optimizeDeps: {
-    include: [],
     exclude: [
-    '@lightningjs/solid',
-    '@lightningjs/solid-primitives',
-    '@lightningjs/renderer/core',
-    '@lightningjs/renderer/workers/renderer']
+      "@lightningtv/solid",
+      "@lightningtv/core",
+      "@lightningjs/renderer",
+      "@lightningtv/solid-ui",
+    ],
   },
   server: {
-    hmr: false,
+    port: 5174,
+    hmr: true,
     headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
+      "Cross-Origin-Opener-Policy": "same-origin",
+      "Cross-Origin-Embedder-Policy": "require-corp",
     },
   },
-  test: {
-    browser: {
-      enabled: true,
-      headless: false,
-      provider: "playwright",
-      name: 'webkit'
-    },
-    testTransformMode: { web: ['/.[jt]sx?$/'] },
-    globals: true
-  }
 });

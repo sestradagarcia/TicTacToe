@@ -1,6 +1,6 @@
-import { Text, View, hexColor } from "@lightningjs/solid";
-import { Column } from '@lightningjs/solid-primitives';
-import { createEffect, createSignal } from "solid-js";
+import { ElementNode, Text, View, hexColor } from "@lightningtv/solid";
+import { createEffect, createSignal, For, Show } from "solid-js";
+import { Column } from '@lightningtv/solid-ui';
 import Utils from '../lib/GameUtils.js'
 import Grid from "../components/Grid.jsx";
 
@@ -14,10 +14,10 @@ export default function Game({ mode }) {
     const [player2Score, setPlayer2Score] = createSignal(0)
     const [computerScore, setComputerScore] = createSignal(0)
 
-    let playerPosition = {};
-    let player1 = {};
-    let player2 = {};
-    let computer = {};
+    let playerPosition!: ElementNode
+    let player1!: ElementNode
+    let player2!: ElementNode
+    let computer!: ElementNode
 
     const reset = () => {
         setIndex(0)
@@ -185,5 +185,4 @@ export default function Game({ mode }) {
             </Show>
         </View>
     )
-
 }
