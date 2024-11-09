@@ -2,7 +2,7 @@
   "name": "solid-app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.tsx",
   "type": "module",
   "scripts": {
     "start": "vite --open --host --force",
@@ -11,6 +11,7 @@
     "build:analyze": "vite-bundle-visualizer",
     "preview": "vite preview --open --port 8080",
     "test": "vitest",
+    "tsc": "tsc",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "eslint --fix --ext .js,.jsx ."
@@ -18,15 +19,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lightningjs/renderer": "^0.7.0",
-    "@lightningjs/solid": "^0.11.5",
-    "@lightningjs/solid-primitives": "^0.4.8",
+    "@lightningjs/renderer": "^2.2.0",
+    "@lightningtv/core": "2.1.6",
+    "@lightningtv/l3-ui-theme-base": "^0.4.1",
+    "@lightningtv/solid": "2.1.2",
+    "@lightningtv/solid-ui": "^0.29.4",
+    "@lightningtv/vite-hex-transform": "^1.1.0",
     "@mediapipe/tasks-vision": "^0.10.18",
-    "@solidjs/router": "^0.10.10",
-    "solid-js": "^1.8.12"
+    "@solid-primitives/scheduled": "^1.4.3",
+    "@solidjs/router": "^0.14.7",
+    "@vitejs/plugin-legacy": "^5.4.2",
+    "solid-js": "^1.9.1"
   },
   "devDependencies": {
-    "@lightningjs/vite-plugin-import-chunk-url": "^0.3.0",
     "@storybook/addon-essentials": "^7.6.10",
     "@storybook/addon-interactions": "^7.6.10",
     "@storybook/addon-links": "^7.6.10",
@@ -37,13 +42,18 @@
     "@vitest/browser": "^1.2.2",
     "jsdom": "^24.0.0",
     "playwright": "^1.41.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "storybook": "^7.6.10",
     "vite": "^5.0.12",
     "vite-bundle-visualizer": "^1.0.0",
     "vite-plugin-cross-origin-isolation": "^0.1.6",
     "vite-plugin-solid": "^2.9.1",
     "vitest": "^1.2.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@lightningtv/core": "$@lightningtv/core",
+      "@lightningtv/solid": "$@lightningtv/solid",
+      "@lightningjs/renderer": "$@lightningjs/renderer"
+    }
   }
 }

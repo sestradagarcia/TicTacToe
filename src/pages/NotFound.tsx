@@ -1,4 +1,4 @@
-import { Text } from "@lightningjs/solid";
+import { Text } from "@lightningtv/solid";
 
 export default () => {
   return (

@@ -1,10 +1,14 @@
-import { Text, View, hexColor } from "@lightningjs/solid";
-import { Column } from '@lightningjs/solid-primitives';
-import { createEffect, createSignal } from "solid-js";
+import { ElementNode, Text, View, hexColor } from "@lightningtv/solid";
+import { createEffect, createSignal, For, Show, onMount, onCleanup } from "solid-js";
+import { Column } from '@lightningtv/solid-ui';
 import Utils from '../lib/GameUtils.js'
-import Grid from "../components/GameGrid.jsx";
+import Grid from "../components/GameGrid.tsx";
 
-export default function Game({ mode }) {
+interface GameProps {
+    mode: string;
+}
+
+export default function Game({ mode }: GameProps) {
     const [index, setIndex] = createSignal(0)
     const [tiles, setTiles] = createSignal(['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'])
     const [player1Turn, setPlayer1Turn] = createSignal(true)
@@ -14,10 +18,10 @@ export default function Game({ mode }) {
     const [player2Score, setPlayer2Score] = createSignal(0)
     const [computerScore, setComputerScore] = createSignal(0)
 
-    let playerPosition = {};
-    let player1 = {};
-    let player2 = {};
-    let computer = {};
+    let playerPosition!: ElementNode
+    let player1!: ElementNode
+    let player2!: ElementNode
+    let computer!: ElementNode
 
     const reset = () => {
         setIndex(0)
@@ -135,8 +139,8 @@ export default function Game({ mode }) {
     }
 
     createEffect(() => {
-        playerPosition.x = (index() % 3) * 300 + 435
-        playerPosition.y = ~~(index() / 3) * 300 + 145
+        playerPosition.x = (index() % 3) * 300 + 428
+        playerPosition.y = ~~(index() / 3) * 300 + 148
         playerPosition.alpha = !end() ? 0.1 : 0 || end() && 0
         playerPosition.color = player1Turn() ? hexColor('#FFFF00') : hexColor('#FF0000')
         player1.fontSize = player1Turn() && !end() ? 50 : 40
@@ -162,10 +166,10 @@ export default function Game({ mode }) {
                     x: { duration: 800, easing: 'ease-in-out' },
                 },
             }} />
-            <Grid x={700} y={120} color={0x40ffffff} />
+            <Grid x={700} y={120} color={0x40ffffff}/>
             <For each={tiles()}>
                 {(tile, idx) => (
-                    <Text style={{ x: (idx() % 3) * 300 + 525, y: ~~(idx() / 3) * 300 + 210, color: 0x40ffffff, zIndex: 1000, }}>
+                    <Text style={{ x: (idx() % 3) * 300 + 505, y: ~~(idx() / 3) * 300 + 165, color: 0x40ffffff, zIndex: 1000, fontSize:200 }}>
                         {tile === 'e' ? '' : tile}
                     </Text>
                 )}
@@ -185,5 +189,4 @@ export default function Game({ mode }) {
             </Show>
         </View>
     )
-
 }
