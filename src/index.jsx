@@ -8,6 +8,7 @@ import coreExtensionModuleUrl from './AppCoreExtensions.js?importChunkUrl';
 import coreWorkerUrl from './threadx-core-worker.js?importChunkUrl';
 import Splash from './pages/Splash';
 import MainMenu from './pages/MainMenu';
+import SubMenu from './pages/SubMenu';
 import Game from './pages/Game';
 import About from './pages/About';
 import ExitMenu from './pages/ExitMenu';
@@ -29,6 +30,7 @@ render(() =>  (
     <HashRouter root={App}>
       <Route path="/" component={() => <Splash text={"LOADING..."} path='/menu'/>} />
       <Route path="/menu" component={MainMenu} />
+      <Route path="/submenu" component={SubMenu} />
       <Route path="/twoPlayerGame" component={() => <Game mode={"two-player"}/>}/>
       <Route path="/singlePlayerGame" component={() => <Game mode={"single-player"}/>} />
       <Route path="/about" component={About} />

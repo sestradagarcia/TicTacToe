@@ -2,7 +2,7 @@ import { Text, View, hexColor } from "@lightningjs/solid";
 import { Column } from '@lightningjs/solid-primitives';
 import { createEffect, createSignal } from "solid-js";
 import Utils from '../lib/GameUtils.js'
-import Grid from "../components/Grid.jsx";
+import Grid from "../components/GameGrid.jsx";
 
 export default function Game({ mode }) {
     const [index, setIndex] = createSignal(0)

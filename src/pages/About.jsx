@@ -1,7 +1,7 @@
 import { Text, View } from "@lightningjs/solid";
 import { useNavigate } from "@solidjs/router";
 import { onMount } from "solid-js";
-import Grid from "../components/Grid";
+import Grid from "../components/GameGrid";
 
 export default function About() {
     const navigate = useNavigate();
