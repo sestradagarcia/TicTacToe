@@ -8,6 +8,7 @@ import NotFound from './pages/NotFound';
 import Splash from './pages/Splash';
 import MainMenu from './pages/MainMenu';
 import SubMenu from './pages/SubMenu';
+import GameDifficultyMenu from './pages/GameDifficultyMenu';
 import Game from './pages/Game';
 import About from './pages/About';
 import ExitMenu from './pages/ExitMenu';
@@ -37,8 +38,11 @@ render(() => (
       <Route path="/" component={() => <Splash text={"LOADING..."} path='/menu' />} />
       <Route path="/menu" component={MainMenu} />
       <Route path="/submenu" component={() => <SubMenu/>} />
+      <Route path="/gamedifficultymenu" component={() => <GameDifficultyMenu/>} />
       <Route path="/twoplayergame" component={() => <Game mode={"two-player"} />} />
-      <Route path="/singleplayergame" component={() => <Game mode={"single-player"} />} />
+      <Route path="/singleplayergameeasy" component={() => <Game mode={"single-player"} difficulty= {"easy"} />} />
+      <Route path="/singleplayergamemedium" component={() => <Game mode={"single-player"} difficulty= {"medium"} />} />
+      <Route path="/singleplayergamehard" component={() => <Game mode={"single-player"}  difficulty= {"hard"}/>} />
       <Route path="/about" component={About} />
       <Route path="/exitmenu" component={ExitMenu} />
       <Route path="/save" component={() => <Splash text={"SAVING..."} />} />

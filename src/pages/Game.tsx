@@ -1,14 +1,16 @@
 import { ElementNode, Text, View, hexColor } from "@lightningtv/solid";
 import { createEffect, createSignal, For, Show, onMount, onCleanup } from "solid-js";
 import { Column } from '@lightningtv/solid-ui';
-import Utils from '../lib/GameUtils.js'
-import Grid from "../components/GameGrid.tsx";
+import Utils from '../lib/GameUtils.js';
+import Grid from "../components/GameGrid";
+import { enableWebcam } from "../lib/GestureRecogniser";
 
 interface GameProps {
     mode: string;
+    difficulty: string;
 }
 
-export default function Game({ mode }: GameProps) {
+export default function Game({ mode, difficulty }: GameProps) {
     const [index, setIndex] = createSignal(0)
     const [tiles, setTiles] = createSignal(['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'])
     const [player1Turn, setPlayer1Turn] = createSignal(true)
@@ -30,8 +32,9 @@ export default function Game({ mode }: GameProps) {
         setGameOutcome('')
         setEnd(false)
     }
-
+    
     //handle up, down,left, and right keys on playersTurn to move playerPosition
+
     const handleUp = () => {
         if (player1Turn() || mode === "two-player") {
             if (index() - 3 >= 0) {
@@ -111,7 +114,7 @@ export default function Game({ mode }: GameProps) {
 
     //handle computers turn
     const ComputerTurn = () => {
-        const AIPosition = Utils.AI(tiles())
+        const AIPosition = Utils.AI(tiles(), difficulty)
         if (AIPosition === -1) {
             setGameOutcome('Tie')
             setEnd(true)
@@ -137,6 +140,29 @@ export default function Game({ mode }: GameProps) {
         }
         console.log("show notification")
     }
+
+    onMount(() => {
+        const videoElement = document.createElement('video');
+        videoElement.id = 'webcam';
+        videoElement.style.position = 'absolute';
+        videoElement.style.top = '50px';
+        videoElement.style.left = '50px';
+        videoElement.style.width = '600px';
+        videoElement.style.zIndex = '100';
+        document.body.appendChild(videoElement);
+
+        enableWebcam(videoElement, {
+            handleUp,
+            handleDown,
+            handleLeft,
+            handleRight,
+            handleEnter,
+        });
+
+        onCleanup(() => {
+            videoElement.remove();
+        });
+    });
 
     createEffect(() => {
         playerPosition.x = (index() % 3) * 300 + 428

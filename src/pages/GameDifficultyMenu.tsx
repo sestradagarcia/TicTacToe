@@ -10,8 +10,9 @@ interface MenuItem {
 export default function MainMenu() {
     // Define the menu items with explicit type
     const menuItems: MenuItem[] = [
-        { label: "TWO PLAYER", path: "/twoplayergame" },
-        { label: "SINGLE PLAYER", path: "/gamedifficultymenu" }
+        { label: "EASY", path: "/singleplayergameeasy" },
+        { label: "MEDIUM", path: "/singleplayergamemedium" },
+        { label: "HARD", path: "/singleplayergamehard" }
     ];
 
     return (

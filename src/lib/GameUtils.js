@@ -1,14 +1,10 @@
 /**
- * We test the current state of the game against a set of winning patterns by normalizing
- * the actual pattern values an testing them against a provided regular expression
- * @param regex
+ * Check if there is a winner in the current state of the game
  * @param tiles
- * @returns {number[]|*}
+ * @returns {string|boolean} - returns 'x' if the player wins, 'o' if the AI wins, or false if no winner
  */
-const getMatchingPatterns = (regex, tiles) => {
-  // defines a function that takes a regular expression regex and an array tiles as arguments.
+const getWinner = (tiles) => {
   const patterns = [
-    //This array patterns represents winning patterns in a tic-tac-toe game.
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
@@ -17,72 +13,115 @@ const getMatchingPatterns = (regex, tiles) => {
     [2, 5, 8],
     [0, 4, 8],
     [2, 4, 6],
-  ]
-  return patterns.reduce((sets, pattern) => {
-    //This starts a reduce operation on the patterns array.
-    const normalized = pattern
-      .map((tileIndex) => {
-        return tiles[tileIndex]
-      })
-      .join('')
-    if (regex.test(normalized)) {
-      sets.push(pattern)
+  ];
+  for (let pattern of patterns) {
+    const [a, b, c] = pattern;
+    if (tiles[a] !== 'e' && tiles[a] === tiles[b] && tiles[a] === tiles[c]) {
+      return tiles[a];
     }
-    return sets
-  }, [])
-}
+  }
+  return false;
+};
 
 /**
- * Search through tiles for a potential move that can lead to a win
- * @param tiles
- * @returns {number}
+ * Minimax algorithm to evaluate the optimal move
+ * @param tiles - the current board state
+ * @param isMaximizing - boolean to differentiate between maximizing and minimizing turn
+ * @returns {number} - the score for the current board state
  */
-const getFutureWinningIndex = (tiles) => {
-  let index = -1
-  const player = /(ex{2}|x{2}e|xex)/i
-  const ai = /(e0{2}|0{2}e|0e0)/i
+const minimax = (tiles, isMaximizing) => {
+  const winner = getWinner(tiles);
+  if (winner === 'x') return -1; // Player wins
+  if (winner === 'o') return 1; // AI wins
+  if (!tiles.includes('e')) return 0; // Tie
 
-  // since we're testing for ai we give prio to letting ourself win
-  // instead of blocking the potential win for the player
-  const set = [...getMatchingPatterns(player, tiles), ...getMatchingPatterns(ai, tiles)]
-
-  if (set.length) {
-    set.pop().forEach((tileIndex) => {
-      if (tiles[tileIndex] === 'e') {
-        index = tileIndex
+  if (isMaximizing) {
+    let bestScore = -Infinity;
+    for (let i = 0; i < tiles.length; i++) {
+      if (tiles[i] === 'e') {
+        tiles[i] = 'o';
+        const score = minimax(tiles, false);
+        tiles[i] = 'e';
+        bestScore = Math.max(score, bestScore);
       }
-    })
+    }
+    return bestScore;
+  } else {
+    let bestScore = Infinity;
+    for (let i = 0; i < tiles.length; i++) {
+      if (tiles[i] === 'e') {
+        tiles[i] = 'x';
+        const score = minimax(tiles, true);
+        tiles[i] = 'e';
+        bestScore = Math.min(score, bestScore);
+      }
+    }
+    return bestScore;
   }
+};
 
-  return index
-}
+/**
+ * Find the best move for the AI using the minimax algorithm
+ * @param tiles - the current board state
+ * @returns {number} - the index of the best move
+ */
+const findBestMove = (tiles) => {
+  let bestScore = -Infinity;
+  let move = -1;
+  for (let i = 0; i < tiles.length; i++) {
+    if (tiles[i] === 'e') {
+      tiles[i] = 'o';
+      const score = minimax(tiles, false);
+      tiles[i] = 'e';
+      if (score > bestScore) {
+        bestScore = score;
+        move = i;
+      }
+    }
+  }
+  return move;
+};
+
+/**
+ * Get a random available move
+ * @param tiles
+ * @returns {number} - index of a random empty tile
+ */
+const getRandomMove = (tiles) => {
+  const availableMoves = tiles
+    .map((tile, index) => (tile === 'e' ? index : null))
+    .filter((index) => index !== null);
+  return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+};
+
+/**
+ * Choose the best move based on difficulty level
+ * @param tiles
+ * @param difficulty - 'easy', 'medium', or 'hard'
+ * @returns {number} - index of the best move
+ */
+const chooseMove = (tiles, difficulty) => {
+  if (difficulty === 'easy') {
+    return getRandomMove(tiles); // AI chooses a random move
+  } else if (difficulty === 'medium') {
+    // 50% chance of choosing the best move, 50% chance of random move
+    return Math.random() < 0.5 ? findBestMove(tiles) : getRandomMove(tiles);
+  } else {
+    // Hard mode: always choose the best move
+    return findBestMove(tiles);
+  }
+};
 
 export default {
-  //Exporting these functions as properties of an object
-  AI: (tiles) => {
-    const mostLogicalIndex = getFutureWinningIndex(tiles)
-    if (mostLogicalIndex !== -1) {
-      return mostLogicalIndex
-    } else {
-      const opt = tiles
-        .map((el, idx) => {
-          if (el === 'e') return idx
-        })
-        .filter(Boolean)
-
-      // test for tie
-      if (!opt.length) {
-        return -1
-      }
-      return opt[~~(Math.random() * opt.length)]
-    }
+  /**
+   * Get the best move for the AI based on the chosen difficulty
+   * @param tiles - the current board state
+   * @param difficulty - 'easy', 'medium', or 'hard'
+   * @returns {number} - the index of the best move or -1 if no move is possible
+   */
+  AI: (tiles, difficulty = 'hard') => {
+    const bestMove = chooseMove(tiles, difficulty);
+    return bestMove !== -1 ? bestMove : -1;
   },
-  getWinner: (tiles) => {
-    const regex = /(x{3}|o{3})/i
-    const set = getMatchingPatterns(regex, tiles)
-    if (set) {
-      return tiles[set.join('')[0]]
-    }
-    return false
-  },
-}
+  getWinner,
+};

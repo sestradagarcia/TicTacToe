@@ -7,7 +7,7 @@ export default function MainMenu() {
             x: 600,
             y: 400
         }}>
-            <Menu items={[{ label: 'START GAME', path: '/subMenu' }, { label: 'ABOUT', path: '/about' }, { label: 'EXIT', path: '/exitmenu' }]} />
+            <Menu items={[{ label: 'START GAME', path: '/submenu' }, { label: 'ABOUT', path: '/about' }, { label: 'EXIT', path: '/exitmenu' }]} />
         </View>
     )
 }
