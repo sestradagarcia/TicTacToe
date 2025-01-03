@@ -65,13 +65,13 @@ export default async function GestureRecognition(
       const constraints = { video: true };
       navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         videoElement.srcObject = stream;
-        videoElement.addEventListener("loadeddata", predictWebcam);
+        videoElement.addEventListener("loadeddata", getWebcamGestures);
       });
     }
   }
 
   // Predict gestures from the webcam stream
-  async function predictWebcam() {
+  async function getWebcamGestures() {
     if (runningMode === "IMAGE") {
       runningMode = "VIDEO";
       await gestureRecognizer.setOptions({ runningMode: "VIDEO" });
@@ -186,7 +186,7 @@ export default async function GestureRecognition(
     }
 
     if (webcamRunning) {
-      window.requestAnimationFrame(predictWebcam);
+      window.requestAnimationFrame(getWebcamGestures);
     }
   }
 }
