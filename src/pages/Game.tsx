@@ -3,7 +3,7 @@ import { createEffect, createSignal, For, Show, onMount, onCleanup } from "solid
 import { Column } from '@lightningtv/solid-ui';
 import Utils from '../lib/GameUtils.js';
 import Grid from "../components/GameGrid";
-import { enableWebcam } from "../lib/GestureRecogniser";
+import GestureRecognition from "../lib/GestureRecogniser.js";
 
 interface GameProps {
     mode: string;
@@ -142,23 +142,28 @@ export default function Game({ mode, difficulty }: GameProps) {
     }
 
     onMount(() => {
-        const videoElement = document.createElement('video');
-        videoElement.id = 'webcam';
+        const videoElement = document.getElementById("webcam") as HTMLVideoElement;
+    
+        if (!videoElement || !(videoElement instanceof HTMLVideoElement)) {
+            console.error("videoElement is not a valid HTMLVideoElement");
+            return;
+        }
+        videoElement.style.transform = 'scaleX(-1)';
         videoElement.style.position = 'absolute';
         videoElement.style.top = '50px';
         videoElement.style.left = '50px';
         videoElement.style.width = '600px';
         videoElement.style.zIndex = '100';
         document.body.appendChild(videoElement);
-
-        enableWebcam(videoElement, {
+    
+        GestureRecognition(videoElement, {
             handleUp,
             handleDown,
             handleLeft,
             handleRight,
             handleEnter,
         });
-
+    
         onCleanup(() => {
             videoElement.remove();
         });
