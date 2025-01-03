@@ -16,8 +16,6 @@ export default async function GestureRecognition(
   let gestureRecognizer: GestureRecognizer;
   let runningMode: string = "IMAGE";
   let webcamRunning: boolean = false;
-  const videoHeight: string = "360px";
-  const videoWidth: string = "480px";
   let lastVideoTime: number = -1;
   let results: any;
 
@@ -32,6 +30,7 @@ export default async function GestureRecognition(
           modelAssetPath: "models/gesture_recognizer.task",
           delegate: "GPU",
         },
+        numHands: 1, 
         runningMode: runningMode,
       });
     } catch (error) {
