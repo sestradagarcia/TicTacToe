@@ -83,10 +83,6 @@ export default async function GestureRecognition(
       results = gestureRecognizer.recognizeForVideo(videoElement, nowInMs);
     }
 
-    // Update video and canvas dimensions
-    videoElement.style.height = videoHeight;
-    videoElement.style.width = videoWidth;
-
     let previousPosition = { x: 'left', y: 'top' }; // Initialize previous position
 
     if (results?.gestures?.length > 0) {
